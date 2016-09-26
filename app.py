@@ -1,4 +1,4 @@
-import os, uuid, datetime, bleach
+import os, uuid, datetime, bleach, math
 from urllib.parse import urlparse
 import motor.motor_tornado
 from tornado.ioloop import IOLoop
@@ -10,18 +10,46 @@ from slugify import slugify
 
 class HomePageHandler(RequestHandler):
   def get(self):
-    self.redirect('/news')
+    self.redirect('/news/1')
 
 
 class NewsListHandler(RequestHandler):
-  async def get(self):
+  async def get(self, page):
     db = self.settings['db']
-    collection = db.news
+    news = db.news
+
+    #pagination
+    amount_of_news = await news.find({}).count()
+    news_per_page = 2
+    current_page = int(page)
+    news_to_skip = (current_page - 1) * news_per_page
+    amount_of_pages = math.ceil(amount_of_news / news_per_page)
+
+    if current_page+1 <= amount_of_pages:
+      next_page = current_page+1
+    else:
+      next_page = None
+
+    if current_page-1 >= 1:
+      prev_page = current_page-1
+    else:
+      prev_page = None
+
+    pagination = {
+      "current_page": current_page,
+      "next_page": next_page,
+      "prev_page": prev_page,
+      "first_page": 1,
+      "last_page": amount_of_pages,
+    }
+
+
     items = []
-    async for document in collection.find({}).sort("_id", -1):
+    async for document in news.find({}).sort("_id", -1).skip(news_to_skip).limit(news_per_page):
       document['datetime'] = document['datetime'].strftime("%Y-%m-%d %H:%M")
       items.append(document)
-    self.render("index.html", items=items)
+
+    self.render("index.html", items=items, pagination=pagination)
 
 
 class AddNewsHandler(RequestHandler):
@@ -38,7 +66,7 @@ class AddNewsHandler(RequestHandler):
     year = now.strftime('%Y')
     month = now.strftime('%m')
     day = now.strftime('%d')
-    url = "%s/%s/%s/%s/%s" % ('news',year, month, day, slugify(title))
+    url = "%s/%s/%s/%s" % (year, month, day, slugify(title))
 
     #body validation
     def filter_src(name, value):
@@ -87,7 +115,8 @@ class SingleNewsPageHandler(RequestHandler):
   async def get(self, *args):
     db = self.settings['db']
     news = db.news
-    item = await news.find_one({"url": self.request.uri[1:]}) #get uri without forward slash
+    url = ('%s/%s/%s/%s') % tuple(args)
+    item = await news.find_one({"url": url}) 
     item['datetime'] = item['datetime'].strftime("%Y-%m-%d %H:%M")
     self.render("single_news.html", item=item)
 
@@ -98,10 +127,10 @@ def main():
   app = Application(
     [
       (r"^/$", HomePageHandler),
-      (r"^/news$", NewsListHandler),
+      (r"^/news/(?P<page>[0-9]+)$", NewsListHandler),
       # /news/year/month/day/slug
-      (r"^/news/([0-9]{4})/([0-9]{2})/([0-9]{2})/([a-z-]+)$", SingleNewsPageHandler),
-      (r"^/add$", AddNewsHandler),
+      (r"^/news/([0-9]{4})/([0-9]{2})/([0-9]{2})/([a-z0-9-]+)$", SingleNewsPageHandler),
+      (r"^/news/add$", AddNewsHandler),
     ],
     db=db,
     template_path=os.path.join(os.path.dirname(__file__), "templates"),

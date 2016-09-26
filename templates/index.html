@@ -12,4 +12,26 @@
     <img src="{{ item['img_url'] }}" alt="">
     <hr>
   {% end %}
+  <div class="pagination">
+
+    {% if pagination['current_page'] != pagination['first_page'] %}
+      <span class="first"><a href="{{ pagination['first_page'] }}">first</a></span>
+    {% end %}
+
+    {% if pagination['prev_page'] %}
+      <span class="prev"><a href="{{ pagination['prev_page'] }}">prev</a></span>
+    {% end %}
+
+    <span>{{ pagination['current_page'] }} of {{ pagination['last_page'] }}</span>
+
+    {% if pagination['next_page'] %}
+      <span class="next"><a href="{{ pagination['next_page'] }}">next</a></span>
+    {% end %}
+
+    {% if pagination['current_page'] != pagination['last_page'] %}
+      <span class="first"><a href="{{ pagination['last_page'] }}">last</a></span>
+    {% end %}
+
+  </div>
+  
 {% end %}

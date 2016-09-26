@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}{{ item['title'] }}{% end %}
+
+{% block content %}
+    <h1>{{ item['title'] }}</h1>
+    <p>{{ item['datetime'] }}</p>
+    <p>{{ item['body'] }}</p>
+    <img src="{{ item['img_url'] }}" alt="">
+{% end %}

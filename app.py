@@ -8,26 +8,37 @@ from slugify import slugify
 
 
 
-class MainHandler(RequestHandler):
+class HomePageHandler(RequestHandler):
+  def get(self):
+    self.redirect('/news')
+
+
+class NewsListHandler(RequestHandler):
   async def get(self):
     db = self.settings['db']
     collection = db.news
     items = []
-    async for document in collection.find():
+    async for document in collection.find({}).sort("_id", -1):
       document['datetime'] = document['datetime'].strftime("%Y-%m-%d %H:%M")
       items.append(document)
     self.render("index.html", items=items)
 
+
 class AddNewsHandler(RequestHandler):
+
   def get(self):
     self.render("add_news.html")
+
   def post(self):
     db = self.settings['db']
     news = db.news
-
     title = self.get_argument("title")
     body = self.get_argument("body")
-    url = slugify(title)
+    now = datetime.datetime.now()
+    year = now.strftime('%Y')
+    month = now.strftime('%m')
+    day = now.strftime('%d')
+    url = "%s/%s/%s/%s/%s" % ('news',year, month, day, slugify(title))
 
     #body validation
     def filter_src(name, value):
@@ -54,32 +65,48 @@ class AddNewsHandler(RequestHandler):
       upload_path = self.settings['static_path'] + '/uploaded_images/'
       fh = open(upload_path + cname, 'wb')
       fh.write(fileinfo['body'])
-      img_url = upload_path + cname
+      img_url = '/' + upload_path + cname
       print('img_url', img_url)
     else:
       self.finish('Фото должно быть расширения .jpg или .jpeg')
-    self.redirect("/")
 
     #insert document into database
     document = {
       "title": title,
       "body": cleaned_body,
       "url": url,
-      "datetime": datetime.datetime.now(),
+      "datetime": now,
       "img_url": img_url
     }
     news.insert(document)
+
+    self.redirect(document['url'])
+
+
+class SingleNewsPageHandler(RequestHandler):
+  async def get(self, *args):
+    db = self.settings['db']
+    news = db.news
+    item = await news.find_one({"url": self.request.uri[1:]}) #get uri without forward slash
+    item['datetime'] = item['datetime'].strftime("%Y-%m-%d %H:%M")
+    self.render("single_news.html", item=item)
+
+
 
 def main():
   db = motor.motor_tornado.MotorClient('localhost', 27017).simpals
   app = Application(
     [
-      (r"/", MainHandler),
-      (r"/add", AddNewsHandler),
+      (r"^/$", HomePageHandler),
+      (r"^/news$", NewsListHandler),
+      # /news/year/month/day/slug
+      (r"^/news/([0-9]{4})/([0-9]{2})/([0-9]{2})/([a-z-]+)$", SingleNewsPageHandler),
+      (r"^/add$", AddNewsHandler),
     ],
     db=db,
     template_path=os.path.join(os.path.dirname(__file__), "templates"),
     static_path=os.path.join(os.path.dirname(__file__), "static"),
+    debug=True
   )
   app.listen(8888)
   IOLoop.current().start()

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Добавление новости{% end %}
+
+{% block content %}
+<h1>Добавьте свою новость</h1>
+  <form action="/add" method="post" enctype="multipart/form-data">
+  <div>
+    <input type="text" name="title">
+  </div>
+    <div>
+      <textarea name="body"></textarea>
+    </div>
+    <div>
+      <input type="file" accept="image/jpeg" name="image">
+    </div>
+    <div>
+      <input type="submit" value="Отправить">
+    </div>
+  </form>
+{% end %}

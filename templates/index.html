@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Главная страница{% end %}
+
+{% block content %}
+<h1>Список всех новостей</h1>
+  {% for item in items %}
+    <h2>{{ item['title'] }} </h2>
+    <p>{{ item['datetime'] }}</p>
+    <p>{{ item['body'] }}</p>
+    <img src="{{ item['img_url'] }}" alt="">
+    <hr>
+  {% end %}
+{% end %}

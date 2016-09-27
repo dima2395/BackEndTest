@@ -3,35 +3,45 @@
 {% block title %}Главная страница{% end %}
 
 {% block content %}
-<h1>Список всех новостей</h1>
-  {% for item in items %}
-    <h2>{{ item['title'] }} </h2>
-    <p>{{ item['datetime'] }}</p>
-    <p>{{ item['body'] }}</p>
-    <a href="{{ item['url'] }}">Opa!</a>
-    <img src="{{ item['img_url'] }}" alt="">
-    <hr>
-  {% end %}
+  <h1>Список всех новостей</h1>
+  <div class="menu">
+    <a href="/news/add">Добавить новость</a>
+    <a href="">Парсить новости с point.md</a>
+  </div>
+  <div class="news">
+    {% for item in items %}
+    <div class="item">
+      <a href="{{ item['url'] }}"><h2>{{ item['title'] }} </h2></a>
+      <span class="date">{{ item['datetime'] }}</span>
+      <img class="thumbnail"src="{{ item['img_url'] }}" alt="">
+      <div class="body"><p>{{ item['body'] }}</p></div>
+      <hr>
+    </div>
+    {% end %}
+  </div>
+  
   <div class="pagination">
 
     {% if pagination['current_page'] != pagination['first_page'] %}
-      <span class="first"><a href="{{ pagination['first_page'] }}">first</a></span>
+      <span class="first"><a href="{{ pagination['first_page'] }}">&lt;&lt; Начало</a></span>
     {% end %}
 
     {% if pagination['prev_page'] %}
-      <span class="prev"><a href="{{ pagination['prev_page'] }}">prev</a></span>
+      <span class="prev"><a href="{{ pagination['prev_page'] }}">&lt; Пред.</a></span>
     {% end %}
 
-    <span>{{ pagination['current_page'] }} of {{ pagination['last_page'] }}</span>
+    <span>{{ pagination['current_page'] }} из {{ pagination['last_page'] }}</span>
 
     {% if pagination['next_page'] %}
-      <span class="next"><a href="{{ pagination['next_page'] }}">next</a></span>
+      <span class="next"><a href="{{ pagination['next_page'] }}">След. &gt;</a></span>
     {% end %}
 
     {% if pagination['current_page'] != pagination['last_page'] %}
-      <span class="first"><a href="{{ pagination['last_page'] }}">last</a></span>
+      <span class="last"><a href="{{ pagination['last_page'] }}">Конец &gt;&gt;</a></span>
     {% end %}
 
   </div>
   
 {% end %}
+
+

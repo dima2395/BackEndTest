@@ -3,8 +3,16 @@
 {% block title %}{{ item['title'] }}{% end %}
 
 {% block content %}
-    <h1>{{ item['title'] }}</h1>
-    <p>{{ item['datetime'] }}</p>
-    <p>{{ item['body'] }}</p>
-    <img src="{{ item['img_url'] }}" alt="">
+    <div class="menu">
+      <a href="/">Главная</a>
+    </div>
+    <div class="single-news">
+      <h1>{{ item['title'] }}</h1>
+      <img src="{{ item['img_url'] }}" alt="">
+      <p class="body">{{ item['body'] }}</p>
+      <hr>
+      <p class="date">{{ item['datetime'] }}</p>
+    </div>
+    
+    
 {% end %}

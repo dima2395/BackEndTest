@@ -3,19 +3,26 @@
 {% block title %}Добавление новости{% end %}
 
 {% block content %}
-<h1>Добавьте свою новость</h1>
-  <form action="/news/add" method="post" enctype="multipart/form-data">
+  <h1>Добавьте свою новость</h1>
+  <div class="menu">
+    <a href="/">Главная</a>
+  </div>
+
+  <form action="/news/add" method="post" enctype="multipart/form-data" class="add-news-form">
+  <label for="title">Заголовок</label>
   <div>
-    <input type="text" name="title">
+    <input type="text" name="title" class="title">
   </div>
     <div>
-      <textarea name="body"></textarea>
+      <label for="body">Основной текст</label>
+      <textarea name="body" class="body"></textarea>
     </div>
     <div>
-      <input type="file" accept="image/jpeg" name="image">
+      <label for="image">Картинка:</label>
+      <input type="file" accept="image/jpeg" name="image" class="file">
     </div>
     <div>
-      <input type="submit" value="Отправить">
+      <input type="submit" value="Отправить" class="submit">
     </div>
   </form>
 {% end %}

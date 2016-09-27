@@ -1,3 +1,132 @@
+.clearfix {
+  overflow: auto;
+  zoom: 1;
+}
+
+html {
+}
 body {
-  background-color: red;
+  background: url('../images/stardust.png');
+  margin: 0;
+}
+
+.wrapper {
+  background-color: #f3f3f3;
+  margin: 10px auto;
+  width: 1100px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.wrapper h1 {
+  margin-top: 0;
+  padding-top: 15px;
+  text-align: center;
+}
+
+.wrapper .menu {
+  text-align: center;
+  padding-top: 10px;
+}
+
+.wrapper .menu a {
+  color: #b36c35;
+  display: inline-block;
+  padding: 0 10px;
+}
+
+.news .item {
+  margin: 15px;
+  padding: 0 15px;
+}
+
+.news .item a {
+  color: #2c68a5;
+  text-decoration: none;
+}
+
+.news .item a h2{
+  margin-bottom: 5px;
+}
+
+.news .item .date {
+  font-size: 14px;
+  color: gray;
+  display: block;
+}
+
+.news .item .thumbnail{
+  height: 130px;
+  padding: 10px 15px 15px 0;
+}
+
+.news .item .body {
+  line-height: 1.2;
+}
+
+.wrapper .pagination {
+  text-align: center;
+  padding: 30px 0;
+}
+
+.wrapper .pagination .first, 
+.wrapper .pagination .prev, 
+.wrapper .pagination .last, 
+.wrapper .pagination .next{
+  display: inline-block;
+  padding: 5px 7px;
+  border-radius: 3px;
+  background: #b36c35;
+}
+
+.wrapper .pagination .first a, 
+.wrapper .pagination .prev a, 
+.wrapper .pagination .last a, 
+.wrapper .pagination .next a {
+  text-decoration: none;
+  color: white;
+}
+
+.add-news-form {
+  margin: 0 auto;
+  padding: 15px;
+  width: 400px;
+  text-align: center;
+}
+
+.add-news-form label {
+  text-align: left;
+}
+
+.add-news-form .title,
+.add-news-form .body,
+.add-news-form .submit,
+.add-news-form .file {
+  display: inline-block;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  font-size: 18px;
+  width: 100%;
+}
+
+.add-news-form .title {
+  font-size: 18px;
+  line-height: 18px;
+  height: 25px;
+}
+
+.add-news-form .body {
+  height: 200px;
+}
+
+.single-news {
+  padding: 20px;
+}
+
+.single-news img {
+  height: 175px;
+}
+
+.single-news .body {
+  line-height: 1.3;
 }

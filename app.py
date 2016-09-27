@@ -106,9 +106,10 @@ class AddNewsHandler(RequestHandler):
       "datetime": now,
       "img_url": img_url
     }
+
     news.insert(document)
 
-    self.redirect(document['url'])
+    self.redirect('/')
 
 
 class SingleNewsPageHandler(RequestHandler):
@@ -121,6 +122,11 @@ class SingleNewsPageHandler(RequestHandler):
     self.render("single_news.html", item=item)
 
 
+class ParserHandler(RequestHandler):
+  def get(self):
+    pass
+
+
 
 def main():
   db = motor.motor_tornado.MotorClient('localhost', 27017).simpals
@@ -131,6 +137,7 @@ def main():
       # /news/year/month/day/slug
       (r"^/news/([0-9]{4})/([0-9]{2})/([0-9]{2})/([a-z0-9-]+)$", SingleNewsPageHandler),
       (r"^/news/add$", AddNewsHandler),
+      (r"^/parse$", ParserHandler),
     ],
     db=db,
     template_path=os.path.join(os.path.dirname(__file__), "templates"),

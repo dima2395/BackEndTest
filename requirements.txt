@@ -1,0 +1,11 @@
+beautifulsoup4==4.5.1
+bleach==1.4.3
+greenlet==0.4.10
+html5lib==0.9999999
+lxml==3.6.4
+motor==0.6.2
+pymongo==2.8
+python-slugify==1.2.1
+six==1.10.0
+tornado==4.4.1
+Unidecode==0.4.19

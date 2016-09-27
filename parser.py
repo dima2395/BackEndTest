@@ -7,12 +7,13 @@ req = urllib.request.urlopen(source)
 xml = BeautifulSoup(req, 'lxml')
 
 
+#takes bodys of articles
 for item in xml.findAll('item'):
     url = item.guid.text
-    print('url: ', url)
     news = urllib.request.urlopen(url).read()
     html = BeautifulSoup(news,'lxml')
     article = html.find('article', class_="post-text js-comments-article")
     text = article.find_all('p')
-    print(text)
-    print('===================================')
+    print('URL:',url)
+    print('Article body:', text)
+    print('='*15)
